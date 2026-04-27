@@ -480,9 +480,15 @@
   }
 
   // Track click → Google Sheets
-  async function trackClick() {
-    const empleado = getParam('u');
-    const timestamp = new Date().toISOString();
+ async function trackClick() {
+  const empleado = getParam('u');
+  const timestamp = new Date().toISOString();
+  const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwawFAeA94EHrDpYSKWLVkGnpMIxGrW65Dr1k1oKDP5MWQQKNp_lEe8zA6rXbbNtAAm/exec';
+
+  try {
+    await fetch(`${SCRIPT_URL}?empleado=${encodeURIComponent(empleado)}&timestamp=${encodeURIComponent(timestamp)}&evento=click_phishing`);
+  } catch (e) {}
+}
 
     // ════════════════════════════════════════════════════════
     // CONFIGURACIÓN: reemplaza con tu Google Apps Script URL
