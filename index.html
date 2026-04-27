@@ -1,0 +1,512 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Recursos Humanos — I Can Health Center</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=DM+Sans:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: #fff8f2;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem 1rem;
+    overflow-x: hidden;
+  }
+
+  /* Confetti petals background */
+  .petals {
+    position: fixed;
+    top: 0; left: 0; width: 100%; height: 100%;
+    pointer-events: none;
+    z-index: 0;
+    overflow: hidden;
+  }
+  .petal {
+    position: absolute;
+    top: -60px;
+    width: 18px; height: 18px;
+    border-radius: 50% 0 50% 0;
+    opacity: 0.55;
+    animation: fall linear infinite;
+  }
+  @keyframes fall {
+    0%   { transform: translateY(0) rotate(0deg); opacity: 0.6; }
+    100% { transform: translateY(110vh) rotate(360deg); opacity: 0; }
+  }
+
+  /* === PHASE 1: FAKE PRIZE === */
+  #phase-bait {
+    position: relative;
+    z-index: 10;
+    max-width: 560px;
+    width: 100%;
+    background: #fff;
+    border-radius: 20px;
+    box-shadow: 0 8px 40px rgba(180, 60, 80, 0.12);
+    overflow: hidden;
+    animation: popIn 0.5s cubic-bezier(.34,1.56,.64,1) both;
+  }
+  @keyframes popIn {
+    from { opacity: 0; transform: scale(0.88) translateY(24px); }
+    to   { opacity: 1; transform: scale(1) translateY(0); }
+  }
+
+  .card-header {
+    background: linear-gradient(135deg, #c62a47 0%, #e84a6a 60%, #f07c5a 100%);
+    padding: 2.2rem 2rem 1.8rem;
+    text-align: center;
+    position: relative;
+  }
+  .rh-logo {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.75);
+    margin-bottom: 1rem;
+    display: block;
+  }
+  .flower-icon {
+    font-size: 52px;
+    display: block;
+    margin-bottom: 0.6rem;
+    filter: drop-shadow(0 4px 8px rgba(0,0,0,0.15));
+    animation: sway 3s ease-in-out infinite;
+  }
+  @keyframes sway {
+    0%, 100% { transform: rotate(-5deg); }
+    50%       { transform: rotate(5deg); }
+  }
+  .header-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 28px;
+    font-weight: 700;
+    color: #fff;
+    line-height: 1.2;
+    margin-bottom: 0.35rem;
+  }
+  .header-sub {
+    font-size: 13px;
+    color: rgba(255,255,255,0.82);
+    letter-spacing: 0.5px;
+  }
+  .ribbon {
+    position: absolute;
+    top: 14px; right: -28px;
+    background: #ffd166;
+    color: #7a3800;
+    font-size: 11px;
+    font-weight: 500;
+    padding: 5px 36px;
+    transform: rotate(35deg);
+    letter-spacing: 0.5px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+  }
+
+  .card-body {
+    padding: 2rem 2.2rem 2.4rem;
+  }
+  .greeting {
+    font-size: 15px;
+    color: #555;
+    line-height: 1.65;
+    margin-bottom: 1.4rem;
+  }
+  .greeting strong { color: #c62a47; }
+
+  .prize-box {
+    background: #fff5f7;
+    border: 1.5px solid #f5c2cc;
+    border-radius: 14px;
+    padding: 1.4rem 1.6rem;
+    margin-bottom: 1.6rem;
+    display: flex;
+    align-items: center;
+    gap: 1.1rem;
+  }
+  .prize-emoji { font-size: 36px; flex-shrink: 0; }
+  .prize-text { }
+  .prize-label {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    color: #c62a47;
+    font-weight: 500;
+    margin-bottom: 4px;
+  }
+  .prize-name {
+    font-family: 'Playfair Display', serif;
+    font-size: 19px;
+    color: #1a1a1a;
+    font-weight: 700;
+    line-height: 1.25;
+  }
+  .prize-detail {
+    font-size: 12.5px;
+    color: #777;
+    margin-top: 3px;
+  }
+
+  .deadline {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    font-size: 12.5px;
+    color: #e05a20;
+    font-weight: 500;
+    margin-bottom: 1.5rem;
+    background: #fff3ed;
+    border-radius: 8px;
+    padding: 8px 12px;
+  }
+  .deadline-dot {
+    width: 7px; height: 7px;
+    background: #e05a20;
+    border-radius: 50%;
+    flex-shrink: 0;
+    animation: blink 1.1s ease-in-out infinite;
+  }
+  @keyframes blink {
+    0%, 100% { opacity: 1; }
+    50%       { opacity: 0.2; }
+  }
+
+  .cta-btn {
+    display: block;
+    width: 100%;
+    background: linear-gradient(135deg, #c62a47, #e84a6a);
+    color: #fff;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 15px;
+    font-weight: 500;
+    letter-spacing: 0.3px;
+    padding: 15px 24px;
+    border: none;
+    border-radius: 12px;
+    cursor: pointer;
+    text-align: center;
+    transition: transform 0.15s, box-shadow 0.15s;
+    box-shadow: 0 4px 16px rgba(198, 42, 71, 0.35);
+  }
+  .cta-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 7px 22px rgba(198, 42, 71, 0.42);
+  }
+  .cta-btn:active { transform: scale(0.98); }
+
+  .footer-note {
+    font-size: 11.5px;
+    color: #aaa;
+    text-align: center;
+    margin-top: 1rem;
+  }
+
+  /* === PHASE 2: AWARENESS === */
+  #phase-awareness {
+    display: none;
+    position: relative;
+    z-index: 10;
+    max-width: 600px;
+    width: 100%;
+    background: #fff;
+    border-radius: 20px;
+    box-shadow: 0 8px 40px rgba(0,0,0,0.1);
+    overflow: hidden;
+    animation: popIn 0.5s cubic-bezier(.34,1.56,.64,1) both;
+  }
+
+  .awareness-header {
+    background: #1a2540;
+    padding: 2.2rem 2rem 1.8rem;
+    text-align: center;
+  }
+  .shield-icon {
+    font-size: 54px;
+    display: block;
+    margin-bottom: 0.8rem;
+  }
+  .awareness-header h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: 24px;
+    color: #fff;
+    font-weight: 700;
+    line-height: 1.25;
+    margin-bottom: 0.4rem;
+  }
+  .awareness-header p {
+    font-size: 13px;
+    color: rgba(255,255,255,0.6);
+  }
+
+  .awareness-body {
+    padding: 2rem 2.2rem 2.4rem;
+  }
+
+  .alert-banner {
+    background: #fff3cd;
+    border-left: 4px solid #f5a623;
+    border-radius: 0 10px 10px 0;
+    padding: 1rem 1.2rem;
+    margin-bottom: 1.6rem;
+    font-size: 14px;
+    color: #7a4f00;
+    line-height: 1.55;
+  }
+  .alert-banner strong { display: block; margin-bottom: 4px; font-size: 13px; letter-spacing: 0.3px; text-transform: uppercase; color: #9a6200; }
+
+  .section-title {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 1.8px;
+    color: #999;
+    font-weight: 500;
+    margin-bottom: 1rem;
+  }
+
+  .clues-list {
+    list-style: none;
+    margin-bottom: 1.8rem;
+  }
+  .clues-list li {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    padding: 10px 0;
+    border-bottom: 1px solid #f0f0f0;
+    font-size: 14px;
+    color: #333;
+    line-height: 1.5;
+  }
+  .clues-list li:last-child { border-bottom: none; }
+  .clue-icon {
+    width: 28px; height: 28px;
+    border-radius: 50%;
+    background: #fdecea;
+    color: #c62a47;
+    font-size: 14px;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+    margin-top: 1px;
+  }
+
+  .tips-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin-bottom: 1.8rem;
+  }
+  .tip-card {
+    background: #f7f9ff;
+    border-radius: 12px;
+    padding: 1rem;
+  }
+  .tip-card .tip-icon { font-size: 20px; margin-bottom: 6px; display: block; }
+  .tip-card p { font-size: 13px; color: #444; line-height: 1.5; }
+  .tip-card strong { display: block; font-size: 12px; color: #1a2540; margin-bottom: 4px; font-weight: 500; }
+
+  .result-badge {
+    text-align: center;
+    padding: 1.4rem;
+    background: #f0f7ff;
+    border-radius: 14px;
+    margin-bottom: 1.6rem;
+  }
+  .result-badge p { font-size: 13.5px; color: #2c5282; line-height: 1.6; }
+  .result-badge strong { font-size: 15px; display: block; margin-bottom: 6px; color: #1a3a5c; }
+
+  .close-btn {
+    display: block;
+    width: 100%;
+    background: #1a2540;
+    color: #fff;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 14px;
+    font-weight: 500;
+    padding: 13px 24px;
+    border: none;
+    border-radius: 12px;
+    cursor: pointer;
+    text-align: center;
+    transition: background 0.15s;
+  }
+  .close-btn:hover { background: #253353; }
+
+  .awareness-footer {
+    font-size: 12px;
+    color: #bbb;
+    text-align: center;
+    margin-top: 1rem;
+  }
+</style>
+</head>
+<body>
+
+<!-- Animated petals -->
+<div class="petals" id="petals"></div>
+
+<!-- PHASE 1: Fake prize page -->
+<div id="phase-bait">
+  <div class="card-header">
+    <div class="ribbon">¡Exclusivo!</div>
+    <span class="rh-logo">I Can Health Center — Recursos Humanos</span>
+    <span class="flower-icon">🌸</span>
+    <h1 class="header-title">¡Fuiste seleccionado/a!</h1>
+    <p class="header-sub">Sorteo especial Día de las Madres 2025</p>
+  </div>
+  <div class="card-body">
+    <p class="greeting">
+      Estimado/a colaborador/a,<br><br>
+      Con motivo del <strong>Día de las Madres</strong>, el equipo de Recursos Humanos organizó un sorteo especial para toda la plantilla — porque este festejo nos incluye a todos, ya sea para celebrar a tu mamá, tu pareja o a ti misma.<br><br>
+      ¡Tu nombre resultó ganador! Reclama tu regalo antes de que expire.
+    </p>
+
+    <div class="prize-box">
+      <span class="prize-emoji">🎁</span>
+      <div class="prize-text">
+        <p class="prize-label">Tu premio</p>
+        <p class="prize-name">Vale de experiencia SPA + Cena para dos</p>
+        <p class="prize-detail">Para festejar a mamá — válido en establecimientos seleccionados de Monterrey</p>
+      </div>
+    </div>
+
+    <div class="deadline">
+      <div class="deadline-dot"></div>
+      Oferta expira hoy a las 6:00 PM — haz clic para reclamar
+    </div>
+
+    <button class="cta-btn" onclick="showAwareness()">
+      ✅ &nbsp; Reclamar mi premio ahora
+    </button>
+
+    <p class="footer-note">Recursos Humanos · I Can Health Center · Monterrey, N.L.</p>
+  </div>
+</div>
+
+<!-- PHASE 2: Awareness page -->
+<div id="phase-awareness">
+  <div class="awareness-header">
+    <span class="shield-icon">🛡️</span>
+    <h1>Simulacro de phishing</h1>
+    <p>Esta fue una prueba de seguridad interna · I Can Health Center</p>
+  </div>
+  <div class="awareness-body">
+
+    <div class="alert-banner">
+      <strong>⚠️ Acabas de hacer clic en un enlace de phishing simulado</strong>
+      No te preocupes — no hay consecuencias. Este ejercicio es para fortalecer nuestra cultura de ciberseguridad. Tu participación ya fue registrada.
+    </div>
+
+    <p class="section-title">¿Qué señales debiste notar?</p>
+    <ul class="clues-list">
+      <li>
+        <div class="clue-icon">!</div>
+        <span><strong>Urgencia artificial:</strong> "Expira hoy a las 6:00 PM" es una táctica clásica para que actúes sin pensar.</span>
+      </li>
+      <li>
+        <div class="clue-icon">@</div>
+        <span><strong>Remitente sospechoso:</strong> Siempre verifica que el dominio del correo sea oficial (@icanhealth.com), no un dominio parecido.</span>
+      </li>
+      <li>
+        <div class="clue-icon">?</div>
+        <span><strong>Premio no anunciado:</strong> RH nunca entregará premios sin comunicación previa por canales oficiales.</span>
+      </li>
+      <li>
+        <div class="clue-icon">🔗</div>
+        <span><strong>URL del enlace:</strong> Antes de hacer clic, pasa el cursor sobre un enlace para ver a dónde lleva realmente.</span>
+      </li>
+    </ul>
+
+    <p class="section-title">Buenas prácticas</p>
+    <div class="tips-grid">
+      <div class="tip-card">
+        <span class="tip-icon">🔍</span>
+        <strong>Verifica antes de clicar</strong>
+        <p>Pasa el cursor sobre los links y revisa el dominio completo.</p>
+      </div>
+      <div class="tip-card">
+        <span class="tip-icon">📞</span>
+        <strong>Confirma por otro canal</strong>
+        <p>¿Parece raro? Llama o escribe directamente a la persona.</p>
+      </div>
+      <div class="tip-card">
+        <span class="tip-icon">🚨</span>
+        <strong>Reporta los sospechosos</strong>
+        <p>Reenvía correos dudosos al área de TI antes de eliminarlos.</p>
+      </div>
+      <div class="tip-card">
+        <span class="tip-icon">🔒</span>
+        <strong>No ingreses credenciales</strong>
+        <p>Nunca pongas usuario y contraseña en una liga de un correo.</p>
+      </div>
+    </div>
+
+    <div class="result-badge">
+      <strong>Tu participación quedó registrada</strong>
+      <p>El área de TI utilizará estos resultados para reforzar los programas de capacitación en ciberseguridad. Gracias por ser parte del proceso.</p>
+    </div>
+
+    <button class="close-btn" onclick="window.close()">Entendido — cerrar esta página</button>
+    <p class="awareness-footer">Ejercicio autorizado · Área de TI · I Can Health Center</p>
+  </div>
+</div>
+
+<script>
+  // Generate petals
+  const colors = ['#f7a8b8','#ffd6e0','#ffb3c6','#fce4ec','#f48fb1','#fdd835'];
+  const petalsEl = document.getElementById('petals');
+  for (let i = 0; i < 22; i++) {
+    const p = document.createElement('div');
+    p.className = 'petal';
+    p.style.left = Math.random() * 100 + '%';
+    p.style.animationDuration = (5 + Math.random() * 6) + 's';
+    p.style.animationDelay = (Math.random() * 8) + 's';
+    p.style.background = colors[Math.floor(Math.random() * colors.length)];
+    p.style.width = p.style.height = (12 + Math.random() * 14) + 'px';
+    p.style.transform = `rotate(${Math.random()*360}deg)`;
+    petalsEl.appendChild(p);
+  }
+
+  // Read employee name from URL param
+  function getParam(name) {
+    return new URLSearchParams(window.location.search).get(name) || 'desconocido';
+  }
+
+  // Track click → Google Sheets
+  async function trackClick() {
+    const empleado = getParam('u');
+    const timestamp = new Date().toISOString();
+
+    // ════════════════════════════════════════════════════════
+    // CONFIGURACIÓN: reemplaza con tu Google Apps Script URL
+    // ════════════════════════════════════════════════════════
+    const SCRIPT_URL = 'TU_GOOGLE_APPS_SCRIPT_URL_AQUI';
+
+    try {
+      await fetch(SCRIPT_URL, {
+        method: 'POST',
+        mode: 'no-cors',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ empleado, timestamp, evento: 'click_phishing' })
+      });
+    } catch (e) {
+      // Silently fail — don't reveal tracking to the user
+    }
+  }
+
+  function showAwareness() {
+    trackClick();
+    document.getElementById('phase-bait').style.display = 'none';
+    document.getElementById('phase-awareness').style.display = 'block';
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+</script>
+</body>
+</html>
