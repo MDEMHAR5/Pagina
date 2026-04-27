@@ -19,6 +19,7 @@
     padding: 2rem 1rem;
     overflow-x: hidden;
   }
+
   /* Confetti petals background */
   .petals {
     position: fixed;
@@ -478,35 +479,18 @@
     return new URLSearchParams(window.location.search).get(name) || 'desconocido';
   }
 
-  // Track click → Google Sheets
-async function trackClick() {
-  const empleado = getParam('u');
-  const timestamp = new Date().toISOString();
   const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxg5x1JLulZObvIW5yiRG5_3EXP_LUG3cOmL4IpvuBbgUsS8NymvvLer9RBcQgYUb5q/exec';
-  try {
-    await fetch(`${SCRIPT_URL}?empleado=${encodeURIComponent(empleado)}&timestamp=${encodeURIComponent(timestamp)}&evento=click_phishing`);
-  } catch (e) {}
-}
 
-    // ════════════════════════════════════════════════════════
-    // CONFIGURACIÓN: reemplaza con tu Google Apps Script URL
-    // ════════════════════════════════════════════════════════
-    const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxg5x1JLulZObvIW5yiRG5_3EXP_LUG3cOmL4IpvuBbgUsS8NymvvLer9RBcQgYUb5q/exec';
-
-    try {
-      await fetch(SCRIPT_URL, {
-        method: 'POST',
-        mode: 'no-cors',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ empleado, timestamp, evento: 'click_phishing' })
-      });
-    } catch (e) {
-      // Silently fail — don't reveal tracking to the user
-    }
+  function trackClick(empleado) {
+    var timestamp = new Date().toISOString();
+    var url = SCRIPT_URL + '?empleado=' + encodeURIComponent(empleado) + '&timestamp=' + encodeURIComponent(timestamp) + '&evento=click_phishing';
+    var img = new Image();
+    img.src = url;
   }
 
   function showAwareness() {
-    trackClick();
+    var empleado = new URLSearchParams(window.location.search).get('u') || 'desconocido';
+    trackClick(empleado);
     document.getElementById('phase-bait').style.display = 'none';
     document.getElementById('phase-awareness').style.display = 'block';
     window.scrollTo({ top: 0, behavior: 'smooth' });
